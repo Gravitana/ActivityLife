@@ -11,6 +11,8 @@
         android:theme="@style/Theme.ActivityLife">
         <activity android:name=".SecondActivity"></activity>
         <activity android:name=".MainActivity">
+<!--        <activity android:name=".MainActivity"-->
+<!--            android:screenOrientation="portrait">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
