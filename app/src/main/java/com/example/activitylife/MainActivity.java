@@ -14,27 +14,29 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String ARG_COUNT = "ARG_COUNT";
 
-    private TextView counter;
+    private TextView counterText;
 
-    private int count = 0;
+    private Counter counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        counter = findViewById(R.id.counter);
+        counterText = findViewById(R.id.counter_text);
 
         if (savedInstanceState == null) {
             // первый запуск
+
+            counter = new Counter();
+
             logCycle("onCreate() First launch");
         } else {
             logCycle("onCreate() Recreate launch");
-/*
-            // можно восстановить тут, а можно в onRestoreInstanceState()
-            count = savedInstanceState.getInt(ARG_COUNT);
-            counter.setText(getString(R.string.count_value, count));
-*/
+
+            // можно восстановить тут (тут понятнее, что не первый запуск), а можно в onRestoreInstanceState()
+            counter = (Counter) savedInstanceState.getSerializable(ARG_COUNT);
+            counterText.setText(getString(R.string.count_value, counter.getValue()));
         }
 
 /*      // свернули в лямбду
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-        counter.setOnClickListener(v -> {
+        counterText.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SecondActivity.class);
             startActivity(intent);
         });
@@ -54,21 +56,23 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_increase_count).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count++;
-                counter.setText(getString(R.string.count_value, count));
+                counter.increase();
+                counterText.setText(getString(R.string.count_value, counter.getValue()));
             }
         });
 
 
     }
 
+/*
     // вызывается только если есть что восстанавливать
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        count = savedInstanceState.getInt(ARG_COUNT); // восстанавливаем сохранённое значение
-        counter.setText(getString(R.string.count_value, count)); // выводим в поле на экране
+        counter = (Counter) savedInstanceState.getSerializable(ARG_COUNT); // восстанавливаем сохранённое значение
+        counterText.setText(getString(R.string.count_value, counter.getValue())); // выводим в поле на экране
     }
+*/
 
     @Override
     protected void onStart() {
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(ARG_COUNT, count);
+        outState.putSerializable(ARG_COUNT, counter);
         super.onSaveInstanceState(outState);
     }
 
