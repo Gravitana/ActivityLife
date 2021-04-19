@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             logCycle("onCreate() Recreate launch");
 
             // можно восстановить тут (тут понятнее, что не первый запуск), а можно в onRestoreInstanceState()
-            counter = (Counter) savedInstanceState.getSerializable(ARG_COUNT);
+            counter = savedInstanceState.getParcelable(ARG_COUNT);
             counterText.setText(getString(R.string.count_value, counter.getValue()));
         }
 
@@ -53,12 +53,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        findViewById(R.id.btn_increase_count).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                counter.increase();
-                counterText.setText(getString(R.string.count_value, counter.getValue()));
-            }
+        findViewById(R.id.btn_increase_count).setOnClickListener(v -> {
+            counter.increase();
+            counterText.setText(getString(R.string.count_value, counter.getValue()));
         });
 
 
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        counter = (Counter) savedInstanceState.getSerializable(ARG_COUNT); // восстанавливаем сохранённое значение
+        counter = savedInstanceState.getParcelable(ARG_COUNT); // восстанавливаем сохранённое значение
         counterText.setText(getString(R.string.count_value, counter.getValue())); // выводим в поле на экране
     }
 */
@@ -106,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(ARG_COUNT, counter);
+        outState.putParcelable(ARG_COUNT, counter);
         super.onSaveInstanceState(outState);
     }
 
